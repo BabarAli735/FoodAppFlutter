@@ -8,28 +8,50 @@ class CartCotroller extends GetxController {
 
   CartCotroller({required this.cartRepo});
   Map<int, CartModel> _items = {};
+  Map<int, CartModel> get items => _items;
 
   void addItem(ProductModel productModel, int quantity) {
-    // print('length of items ' + _items.length.toString());
+    if (_items.containsKey(productModel.id!)) {
+      _items.update(productModel.id!, (value) {
+        return CartModel(
+            id: value.id,
+            name: value.name,
+            img: value.img,
+            price: value.price,
+            quantity: value.quantity! + quantity,
+            isExist: true,
+            time: DateTime.now().toString());
+      });
+    } else {
+      _items.putIfAbsent(productModel.id!, () {
+        return CartModel(
+            id: productModel.id,
+            name: productModel.name,
+            img: productModel.img,
+            price: productModel.price,
+            quantity: quantity,
+            isExist: true,
+            time: DateTime.now().toString());
+      });
+    }
+  }
 
-    _items.putIfAbsent(productModel.id!, () {
-      print('ading item to cart quantity is ' +
-          productModel.id!.toString() +
-          'quantity is ' +
-          quantity.toString());
-      _items.forEach(
-        (key, value) {
-          print('Quantity is ' + value.quantity.toString());
-        },
-      );
-      return CartModel(
-          id: productModel.id,
-          name: productModel.name,
-          img: productModel.img,
-          price: productModel.price,
-          quantity: quantity,
-          isExist: true,
-          time: DateTime.now().toString());
-    });
+  bool exitInCart(ProductModel productModel) {
+    if (_items.containsKey(productModel.id!)) {
+      return true;
+    } else
+      return false;
+  }
+
+  int getQuantity(ProductModel productModel) {
+    var quantity = 0;
+    if (_items.containsKey(productModel.id!)) {
+      _items.forEach((key, value) {
+        if (key == productModel.id) {
+          quantity = value.quantity!;
+        }
+      });
+    }
+    return quantity;
   }
 }

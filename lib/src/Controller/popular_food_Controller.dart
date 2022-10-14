@@ -64,15 +64,29 @@ class PopularFoodController extends GetxController {
       return quantity;
   }
 
-  void initProduct(CartCotroller cart) {
+  void initProduct(ProductModel productModel, CartCotroller cart) {
     _quantity = 0;
     _inCartiems = 0;
     _cart = cart;
+    var exist = false;
+    exist = _cart.exitInCart(productModel);
+
+    if (exist) {
+      _inCartiems = _cart.getQuantity(productModel);
+    }
+    print("The Quantity inCartItems=" + _inCartiems.toString());
   }
 
   void addCartItem(ProductModel productModel) {
     if (_quantity > 0) {
       _cart.addItem(productModel, _quantity);
+      _quantity = 0;
+      _cart.items.forEach((key, value) {
+        print("The is id is " +
+            value.id.toString() +
+            "The Quantity is " +
+            value.quantity.toString());
+      });
     } else {
       Get.snackbar(
         "Item Count",
