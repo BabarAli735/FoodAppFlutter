@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:sampleproject/src/utils/dimentions.dart';
 
 class SmallText extends StatelessWidget {
   Color? color;
@@ -11,7 +12,7 @@ class SmallText extends StatelessWidget {
       {super.key,
       this.color = const Color.fromARGB(255, 230, 225, 225),
       required this.text,
-      this.size = 12,
+      this.size = 10,
       this.maxline});
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,9 @@
 import 'dart:ffi';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sampleproject/src/Constance/them.dart';
+import 'package:sampleproject/src/Controller/cart_controller.dart';
 import 'package:sampleproject/src/Data/repository/popular_food_repo.dart';
 import 'package:sampleproject/src/Model/popular_model.dart';
 
@@ -12,6 +15,11 @@ class PopularFoodController extends GetxController {
   List<dynamic> get popularFoodList => _popularFoodList;
   bool _isloaded = false;
   bool get isloaded => _isloaded;
+  int _quantity = 0;
+  int _inCartiems = 0;
+  int get inCartItems => _inCartiems + _quantity;
+  int get quantity => _quantity;
+  late CartCotroller _cart;
   Future<void> getPopulaFoodList() async {
     Response response = await popularFoodRepo.getPopularFoodList();
 
@@ -23,5 +31,55 @@ class PopularFoodController extends GetxController {
       _isloaded = true;
       update();
     } else {}
+  }
+
+  void setQuantity(bool isIncreament) {
+    if (isIncreament) {
+      _quantity = checkQuantity(_quantity + 1);
+    } else {
+      _quantity = checkQuantity(_quantity - 1);
+    }
+    update();
+  }
+
+  int checkQuantity(int quantity) {
+    if (quantity < 0) {
+      Get.snackbar(
+        "Item Count",
+        "You Can't reduce More Item",
+        backgroundColor: AppColor.primary,
+        colorText: Colors.white,
+      );
+      return 0;
+    }
+    if (quantity > 20) {
+      Get.snackbar(
+        "Item Count",
+        "You Can't increase More Item",
+        backgroundColor: AppColor.primary,
+        colorText: Colors.white,
+      );
+      return 20;
+    } else
+      return quantity;
+  }
+
+  void initProduct(CartCotroller cart) {
+    _quantity = 0;
+    _inCartiems = 0;
+    _cart = cart;
+  }
+
+  void addCartItem(ProductModel productModel) {
+    if (_quantity > 0) {
+      _cart.addItem(productModel, _quantity);
+    } else {
+      Get.snackbar(
+        "Item Count",
+        "You should ad least add an Item in the cart",
+        backgroundColor: AppColor.primary,
+        colorText: Colors.white,
+      );
+    }
   }
 }

@@ -9,6 +9,7 @@ import 'package:sampleproject/src/Constance/them.dart';
 import 'package:sampleproject/src/Controller/popular_food_Controller.dart';
 import 'package:sampleproject/src/Controller/recommended_food_controller.dart';
 import 'package:sampleproject/src/Model/popular_model.dart';
+import 'package:sampleproject/src/Routes/route_helper.dart';
 import 'package:sampleproject/src/Screens/Food/popular_food_detail.dart';
 import 'package:sampleproject/src/Widget/big_text.dart';
 import 'package:sampleproject/src/Widget/icon_and_text_widget.dart';
@@ -51,16 +52,13 @@ class _BodyState extends State<Body> {
         return popularFood.isloaded
             ? Container(
                 height: Dimentions.pageViewer,
-                child: GestureDetector(
-                  onTap: () => {Get.to(() => PopularFoodDetail())},
-                  child: PageView.builder(
-                      itemCount: popularFood.popularFoodList.length,
-                      controller: pageController,
-                      itemBuilder: (context, index) {
-                        return _buildPageItem(
-                            index, popularFood.popularFoodList[index]);
-                      }),
-                ),
+                child: PageView.builder(
+                    itemCount: popularFood.popularFoodList.length,
+                    controller: pageController,
+                    itemBuilder: (context, index) {
+                      return _buildPageItem(
+                          index, popularFood.popularFoodList[index]);
+                    }),
               )
             : CircularProgressIndicator(
                 color: AppColor.primary,
@@ -101,106 +99,115 @@ class _BodyState extends State<Body> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: recommendedfood.recommendedFoodList.length,
                 itemBuilder: ((context, index) {
-                  return Container(
-                    margin:
-                        EdgeInsets.only(left: 20, bottom: 5, top: 5, right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 120,
-                          width: 120,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                  image: NetworkImage(AppConstance.BASE_URL +
-                                      "/uploads/" +
-                                      recommendedfood
-                                          .recommendedFoodList[index].img),
-                                  fit: BoxFit.cover)),
-                        ),
-                        Expanded(
-                            child: Container(
-                          height: 110,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 68, 18, 185),
-                                  blurRadius: 5.0,
-                                  offset: Offset(0, 5)),
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 113, 201, 31),
-                                  blurRadius: 5.0,
-                                  offset: Offset(-5, 0)),
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 233, 23, 23),
-                                  blurRadius: 5.0,
-                                  offset: Offset(5, 0)),
-                            ],
+                  return GestureDetector(
+                    onTap: () =>
+                        {Get.toNamed(RouteHelper.getrecommendedFood(index))},
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          left: 20, bottom: 5, top: 5, right: 20),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: Dimentions.ScreenHeight * 0.18,
+                            width: Dimentions.ScreenWidth * 0.3,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                    image: NetworkImage(AppConstance.BASE_URL +
+                                        "/uploads/" +
+                                        recommendedfood
+                                            .recommendedFoodList[index].img),
+                                    fit: BoxFit.cover)),
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                BigText(
-                                    text: recommendedfood
-                                        .recommendedFoodList[index].name!),
-                                SizedBox(height: 5),
-                                SmallText(
-                                    maxline: 2,
-                                    text: recommendedfood
-                                        .recommendedFoodList[index]
-                                        .description!),
-                                SizedBox(height: 5),
-                                Row(children: [
-                                  Wrap(
-                                    children: List.generate(
-                                        5,
-                                        (index) => Icon(
-                                              Icons.star,
-                                              size: 15,
-                                              color: AppColor.primary,
-                                            )),
-                                  ),
-                                  SizedBox(width: 10),
-                                  SmallText(text: '4.5'),
-                                  SizedBox(width: 10),
-                                  SmallText(text: '2788'),
-                                  SizedBox(width: 10),
-                                  SmallText(text: 'Comments')
-                                ]),
-                                SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: const [
-                                    IconAndTextWidget(
-                                        icon: Icons.circle_sharp,
-                                        text: 'Normal',
-                                        iconcolor:
-                                            Color.fromARGB(255, 40, 176, 240)),
-                                    IconAndTextWidget(
-                                        icon: Icons.location_on,
-                                        text: '1.4',
-                                        iconcolor:
-                                            Color.fromARGB(255, 90, 163, 247)),
-                                    IconAndTextWidget(
-                                        icon: Icons.access_time_rounded,
-                                        text: '32min',
-                                        iconcolor:
-                                            Color.fromARGB(255, 245, 97, 11)),
-                                  ],
-                                ),
+                          Expanded(
+                              child: Container(
+                            height: Dimentions.ScreenHeight * 0.18,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 68, 18, 185),
+                                    blurRadius: 3.0,
+                                    offset: Offset(0, 4)),
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 113, 201, 31),
+                                    blurRadius: 3.0,
+                                    offset: Offset(-4, 0)),
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 233, 23, 23),
+                                    blurRadius: 3.0,
+                                    offset: Offset(4, 0)),
                               ],
                             ),
-                          ),
-                        ))
-                      ],
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  BigText(
+                                      text: recommendedfood
+                                          .recommendedFoodList[index].name!),
+                                  SizedBox(
+                                      height: Dimentions.ScreenHeight * 0.01),
+                                  SmallText(
+                                      maxline: 2,
+                                      text: recommendedfood
+                                          .recommendedFoodList[index]
+                                          .description!),
+                                  SizedBox(
+                                      height: Dimentions.ScreenHeight * 0.01),
+                                  Row(children: [
+                                    Wrap(
+                                      children: List.generate(
+                                          5,
+                                          (index) => Icon(
+                                                Icons.star,
+                                                size: 15,
+                                                color: AppColor.primary,
+                                              )),
+                                    ),
+                                    SizedBox(
+                                        width: Dimentions.ScreenWidth * 0.01),
+                                    SmallText(text: '4.5'),
+                                    SizedBox(
+                                        width: Dimentions.ScreenWidth * 0.01),
+                                    SmallText(text: '2788'),
+                                    SizedBox(
+                                        width: Dimentions.ScreenWidth * 0.01),
+                                    SmallText(text: 'Comments')
+                                  ]),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: const [
+                                      IconAndTextWidget(
+                                          icon: Icons.circle_sharp,
+                                          text: 'Normal',
+                                          iconcolor: Color.fromARGB(
+                                              255, 40, 176, 240)),
+                                      IconAndTextWidget(
+                                          icon: Icons.location_on,
+                                          text: '1.4',
+                                          iconcolor: Color.fromARGB(
+                                              255, 90, 163, 247)),
+                                      IconAndTextWidget(
+                                          icon: Icons.access_time_rounded,
+                                          text: '32min',
+                                          iconcolor:
+                                              Color.fromARGB(255, 245, 97, 11)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
                   );
                 }))
@@ -229,17 +236,20 @@ class _BodyState extends State<Body> {
       transform: matrix4,
       child: Stack(
         children: [
-          Container(
-            height: Dimentions.pageViewerHeight,
-            margin: EdgeInsets.only(left: 5, right: 5, top: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: index.isEven ? Colors.blueGrey : Colors.cyanAccent,
-              image: DecorationImage(
-                  image: NetworkImage(AppConstance.BASE_URL +
-                      "/uploads/" +
-                      popularFoodList.img!),
-                  fit: BoxFit.cover),
+          GestureDetector(
+            onTap: () => {Get.toNamed(RouteHelper.getPopularFood(index))},
+            child: Container(
+              height: Dimentions.pageViewerHeight,
+              margin: EdgeInsets.only(left: 5, right: 5, top: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: index.isEven ? Colors.blueGrey : Colors.cyanAccent,
+                image: DecorationImage(
+                    image: NetworkImage(AppConstance.BASE_URL +
+                        "/uploads/" +
+                        popularFoodList.img!),
+                    fit: BoxFit.cover),
+              ),
             ),
           ),
           Align(
