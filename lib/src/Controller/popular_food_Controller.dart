@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:sampleproject/src/Constance/them.dart';
 import 'package:sampleproject/src/Controller/cart_controller.dart';
 import 'package:sampleproject/src/Data/repository/popular_food_repo.dart';
+import 'package:sampleproject/src/Model/cart_model.dart';
 import 'package:sampleproject/src/Model/popular_model.dart';
 
 class PopularFoodController extends GetxController {
@@ -43,16 +44,20 @@ class PopularFoodController extends GetxController {
   }
 
   int checkQuantity(int quantity) {
-    if (quantity < 0) {
+    if ((_inCartiems + quantity) < 0) {
       Get.snackbar(
         "Item Count",
         "You Can't reduce More Item",
         backgroundColor: AppColor.primary,
         colorText: Colors.white,
       );
+      if (_inCartiems > 0) {
+        _quantity = -inCartItems;
+        return _quantity;
+      }
       return 0;
     }
-    if (quantity > 20) {
+    if ((_inCartiems + quantity) > 20) {
       Get.snackbar(
         "Item Count",
         "You Can't increase More Item",
@@ -78,22 +83,32 @@ class PopularFoodController extends GetxController {
   }
 
   void addCartItem(ProductModel productModel) {
-    if (_quantity > 0) {
-      _cart.addItem(productModel, _quantity);
-      _quantity = 0;
-      _cart.items.forEach((key, value) {
-        print("The is id is " +
-            value.id.toString() +
-            "The Quantity is " +
-            value.quantity.toString());
-      });
-    } else {
-      Get.snackbar(
-        "Item Count",
-        "You should ad least add an Item in the cart",
-        backgroundColor: AppColor.primary,
-        colorText: Colors.white,
-      );
-    }
+    // if (_quantity > 0) {
+    _cart.addItem(productModel, _quantity);
+    _quantity = 0;
+    _inCartiems = _cart.getQuantity(productModel);
+    _cart.items.forEach((key, value) {
+      print("The is id is " +
+          value.id.toString() +
+          "The Quantity is " +
+          value.quantity.toString());
+    });
+    // } else {
+    //   Get.snackbar(
+    //     "Item Count",
+    //     "You should ad least add an Item in the cart",
+    //     backgroundColor: AppColor.primary,
+    //     colorText: Colors.white,
+    //   );
+    // }
+    update();
+  }
+
+  int get totalItem {
+    return _cart.totalItems;
+  }
+
+  List<CartModel> get getItems {
+    return _cart.getItems;
   }
 }

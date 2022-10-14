@@ -6,6 +6,7 @@ import 'package:sampleproject/src/Constance/them.dart';
 import 'package:sampleproject/src/Controller/cart_controller.dart';
 import 'package:sampleproject/src/Controller/popular_food_Controller.dart';
 import 'package:sampleproject/src/Routes/route_helper.dart';
+import 'package:sampleproject/src/Screens/Cart/cart_page.dart';
 import 'package:sampleproject/src/Screens/Home/main_page.dart';
 import 'package:sampleproject/src/Widget/app_icon.dart';
 import 'package:sampleproject/src/Widget/big_text.dart';
@@ -52,9 +53,40 @@ class PopularFoodDetail extends StatelessWidget {
                     onTap: (() => {Get.toNamed(RouteHelper.initial)}),
                     child: AppIcon(iconData: Icons.arrow_back_ios),
                   ),
-                  GestureDetector(
-                      onTap: (() => {}),
-                      child: AppIcon(iconData: Icons.shopping_cart_checkout)),
+                  GetBuilder<PopularFoodController>(
+                    builder: (controller) {
+                      return Stack(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Get.to(() => CartPage());
+                              },
+                              child: AppIcon(
+                                  iconData: Icons.shopping_cart_checkout)),
+                          Get.find<PopularFoodController>().totalItem >= 1
+                              ? Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: Container(
+                                    height: 20,
+                                    width: 20,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColor.primary),
+                                    child: Center(
+                                        child: BigText(
+                                      text: Get.find<PopularFoodController>()
+                                          .totalItem
+                                          .toString(),
+                                      color: Colors.white,
+                                      size: 10,
+                                    )),
+                                  ))
+                              : Container()
+                        ],
+                      );
+                    },
+                  )
                 ],
               )),
           // Introduce
